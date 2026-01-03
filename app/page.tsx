@@ -147,7 +147,7 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent z-10"></div>
                       <div className="absolute bottom-6 left-6 z-20 text-white">
                         <p className="text-sm font-light opacity-90 tracking-widest uppercase">
-                          Expert Developer
+                          Senior Developer
                         </p>
                         <p className="text-3xl font-bold">Lê Công Hậu</p>
                       </div>
@@ -957,13 +957,16 @@ export default function HomePage() {
                       Tailwind CSS
                     </span>
                     <span className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 hover:border-primary hover:text-primary transition-colors cursor-default">
-                      NodeJS / Express
+                      NodeJS / NestJS / Express
                     </span>
                     <span className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 hover:border-primary hover:text-primary transition-colors cursor-default">
-                      MongoDB / MySQL
+                      MongoDB / MySQL / PostgreSQL
                     </span>
                     <span className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 hover:border-primary hover:text-primary transition-colors cursor-default">
                       Docker &amp; AWS
+                    </span>
+                    <span className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 hover:border-primary hover:text-primary transition-colors cursor-default">
+                      Linux
                     </span>
                   </div>
                 </div>
@@ -996,7 +999,7 @@ export default function HomePage() {
                         Email
                       </h5>
                       <p className="text-slate-600 dark:text-slate-400">
-                        hau.dev@example.com
+                        leconghau095@example.com
                       </p>
                       <p className="text-xs text-slate-400 mt-1">
                         Trả lời trong vòng 2 giờ
@@ -1012,7 +1015,7 @@ export default function HomePage() {
                         Điện Thoại / Zalo
                       </h5>
                       <p className="text-slate-600 dark:text-slate-400">
-                        0987.654.321 (Lê Công Hậu)
+                        0358.500.195 (Lê Công Hậu)
                       </p>
                       <p className="text-xs text-slate-400 mt-1">Hỗ trợ 24/7</p>
                     </div>

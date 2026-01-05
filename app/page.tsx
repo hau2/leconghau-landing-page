@@ -459,6 +459,45 @@ export default function HomePage() {
                 </div>
                 <div className="p-6">
                   <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                    Thiệp cưới online
+                  </h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
+                    Thiệp cưới online có tích hợp QR chuyển khoản.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-slate-400">
+                      Đã bán: 12+
+                    </span>
+                    <a
+                      href="/wedding-demo.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary text-sm font-bold flex items-center gap-1 hover:gap-2 transition-all"
+                    >
+                      Xem Demo
+                      <span className="material-symbols-outlined text-sm">
+                        visibility
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="group bg-white dark:bg-surface-dark rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2">
+                <div className="relative overflow-hidden aspect-video">
+                  <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/0 transition-colors z-10"></div>
+                  <img
+                    alt="Real Estate Template"
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCyASeDPMVYcoOlbL2WfySEHsRMblUx_BxwvdY68SqU-gvguIjQEPVBiY_exY7oEcUs4UhQizOl1WQi_BRlleIxARyuTZNtMxzbCwQ6qELpiAuUXVXokVHNMpaC0qiBhJNuWnMNXO0xyl-RLm75VjpXS-vAJSpmi_iEc9u8uIx6CQRn56zRICaf3hQ3QL__j3XY23TUSiSCMCkKqtdHbIp7VAaoGn6c2xbSxDgkCK1C-2l5WI043C_eVb5AmNZSu3kH2D0xU9bt2c"
+                  />
+                  <div className="absolute top-4 right-4 z-20">
+                    <span className="px-3 py-1 bg-white/90 dark:bg-black/80 backdrop-blur text-xs font-bold rounded-full text-slate-800 dark:text-white shadow-sm">
+                      Bất Động Sản
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
                     Vinhomes Luxury
                   </h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
@@ -853,8 +892,8 @@ export default function HomePage() {
                       <img
                         alt="Lê Công Hậu Avatar"
                         className="w-full h-full object-cover"
-                        src='/images/avatar.png'
-                    />
+                        src="/images/avatar.png"
+                      />
                     </div>
                     <div>
                       <h4 className="text-2xl font-bold text-slate-900 dark:text-white">

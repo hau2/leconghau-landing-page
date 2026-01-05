@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thiệp Cưới Sang Trọng - Nguyễn Văn A &amp; Trần Thị B</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=Great+Vibes&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8B1D24", // Deep Burgundy / Đỏ đô
+                        "primary-light": "#A62730",
+                        "gold": "#C5A059", // Gold / Vàng đồng
+                        "gold-light": "#E5C56D",
+                        "gold-dark": "#997B3D",
+                        "background-light": "#FFFCF7", // Warm cream white
+                        "background-dark": "#1F0A0D", // Deep dark red/black
+                    },
+                    fontFamily: {
+                        "script": ["Great Vibes", "cursive"],
+                        "serif": ["Playfair Display", "serif"],
+                        "body": ["Cormorant Garamond", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    backgroundImage: {
+                        'gold-gradient': 'linear-gradient(135deg, #C5A059 0%, #E5C56D 50%, #C5A059 100%)',
+                        'red-gradient': 'linear-gradient(135deg, #8B1D24 0%, #681218 100%)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        html {
+            scroll-behavior: smooth;
+        }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 10s linear infinite;
+        }.sparkle-text {
+            background: linear-gradient(45deg, #C5A059, #E5C56D, #C5A059);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+        .ornament-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 1.5rem 0;
+        }
+        .ornament-divider::before, .ornament-divider::after {
+            content: "";
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #C5A059, transparent);
+            flex: 1;
+            max-width: 150px;
+        }
+        .ornament-divider span {
+            padding: 0 1rem;
+            color: #C5A059;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-neutral-800 dark:text-neutral-200 font-body transition-colors duration-200 selection:bg-gold selection:text-white">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<button aria-label="Toggle Music" class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gold-gradient text-white shadow-xl shadow-gold/20 animate-spin-slow hover:scale-110 transition-transform border-2 border-white/30">
+<span class="material-symbols-outlined text-[28px]">music_note</span>
+</button>
+<header class="sticky top-0 z-40 flex w-full items-center justify-between border-b border-gold/30 bg-background-light/95 dark:bg-background-dark/95 px-6 py-3 backdrop-blur-md md:px-10 lg:px-20 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+<span class="material-symbols-outlined text-[32px]">diamond</span>
+</div>
+<h2 class="text-2xl font-script text-primary dark:text-gold hidden sm:block pt-1">Thiệp Cưới Online</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-lg font-serif font-medium hover:text-primary transition-colors text-neutral-800 dark:text-neutral-200" href="#couple">Cặp đôi</a>
+<a class="text-lg font-serif font-medium hover:text-primary transition-colors text-neutral-800 dark:text-neutral-200" href="#timeline">Sự kiện</a>
+<a class="text-lg font-serif font-medium hover:text-primary transition-colors text-neutral-800 dark:text-neutral-200" href="#album">Album</a>
+<a class="text-lg font-serif font-medium hover:text-primary transition-colors text-neutral-800 dark:text-neutral-200" href="#map">Bản đồ</a>
+<a class="text-lg font-serif font-medium hover:text-primary transition-colors text-neutral-800 dark:text-neutral-200" href="#gift">Mừng cưới</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex h-10 min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary px-6 text-white transition-colors hover:bg-primary-light border border-gold/50 shadow-md">
+<span class="truncate text-base font-serif font-bold">Gửi lời chúc</span>
+</button>
+<button class="md:hidden text-primary dark:text-gold">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex flex-col items-center">
+<section class="w-full max-w-[1200px] px-4 py-6 md:px-10" id="couple">
+<div class="relative flex min-h-[650px] flex-col items-center justify-center gap-6 rounded-[2rem] bg-cover bg-center bg-no-repeat p-8 text-center shadow-2xl md:gap-8 border-4 border-double border-gold/30" data-alt="Romantic wedding couple photo with soft lighting" style='background-image: linear-gradient(rgba(31, 10, 13, 0.4) 0%, rgba(31, 10, 13, 0.7) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCeEp6anLPZ-DOe_HR0RqfONNBjACwwmn-1cNqm3gwkysVel4XgMXQ6555NH3Qu4Z3j3E53SRTemnAyF93MQDGJHPVRauzVcZGrM6hiJ7nhVs0P9baqzzEozN20Aiy7IbnEjwQp5dGD_QShJRnGKMEae1FNr2ho4slBDniLpUbBIbxTDHSNqgRyiIMeoTmw5nkWzWVbCUR-j-sOhquzVlsHc76E_0wYYMeB8Sgbd0KekBHTiFXFhtMN0GAUbvnBblzG9NHHGy0T9rw");'>
+<div class="absolute inset-0 rounded-[1.8rem] border border-white/10 pointer-events-none"></div>
+<div class="flex flex-col gap-2 animate-fade-in-up items-center max-w-4xl">
+<span class="text-3xl md:text-4xl font-script text-gold-light drop-shadow-lg mb-2">Save The Date</span>
+<div class="ornament-divider opacity-70 mb-4">
+<span class="material-symbols-outlined text-white">favorite</span>
+</div>
+<h1 class="text-5xl font-bold leading-tight tracking-wide text-white md:text-7xl font-serif uppercase drop-shadow-xl">
+                            Lễ Thành Hôn
+                        </h1>
+<h2 class="text-4xl md:text-6xl font-script text-white mt-6 drop-shadow-md">
+                            Nguyễn Văn A <span class="text-gold mx-2 text-3xl md:text-5xl">&amp;</span> Trần Thị B
+                        </h2>
+<div class="mt-6 flex items-center justify-center gap-4 text-white/90 text-xl md:text-2xl font-serif tracking-wider border-t border-b border-white/20 py-3 px-8 backdrop-blur-sm bg-white/5">
+<span>Chủ Nhật</span>
+<span class="text-gold text-2xl">•</span>
+<span>20 . 10 . 2024</span>
+</div>
+</div>
+<div class="mt-8 flex flex-wrap justify-center gap-6">
+<button class="flex h-14 min-w-[160px] items-center justify-center rounded-full bg-gold-gradient px-8 text-lg font-serif font-bold text-white shadow-lg shadow-gold/20 transition-transform hover:scale-105 hover:shadow-gold/40">
+                            Trân trọng kính mời
+                        </button>
+<button class="flex h-14 min-w-[160px] items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/50 px-8 text-lg font-serif font-bold text-white transition-colors hover:bg-white/20 hover:border-gold">
+                            Xem bản đồ
+                        </button>
+</div>
+</div>
+</section>
+<section class="w-full max-w-[960px] px-4 py-16">
+<div class="flex flex-col items-center gap-10">
+<div class="text-center">
+<h3 class="text-4xl md:text-5xl font-script text-primary dark:text-gold mb-3">Cùng đếm ngược giây phút hạnh phúc</h3>
+<p class="text-xl text-neutral-600 dark:text-neutral-400 font-serif italic">Chỉ còn một chút thời gian nữa thôi...</p>
+</div>
+<div class="flex w-full max-w-[700px] gap-4 md:gap-8 justify-center">
+<div class="flex flex-col items-center gap-3">
+<div class="flex h-20 w-20 md:h-28 md:w-28 items-center justify-center rounded-full bg-white dark:bg-neutral-800 shadow-lg border-2 border-gold/40 relative">
+<div class="absolute inset-1 rounded-full border border-gold/20"></div>
+<p class="text-3xl md:text-5xl font-serif font-bold text-primary">30</p>
+</div>
+<span class="text-sm md:text-base font-serif font-semibold uppercase tracking-widest text-gold-dark">Ngày</span>
+</div>
+<div class="flex flex-col items-center gap-3">
+<div class="flex h-20 w-20 md:h-28 md:w-28 items-center justify-center rounded-full bg-white dark:bg-neutral-800 shadow-lg border-2 border-gold/40 relative">
+<div class="absolute inset-1 rounded-full border border-gold/20"></div>
+<p class="text-3xl md:text-5xl font-serif font-bold text-primary">12</p>
+</div>
+<span class="text-sm md:text-base font-serif font-semibold uppercase tracking-widest text-gold-dark">Giờ</span>
+</div>
+<div class="flex flex-col items-center gap-3">
+<div class="flex h-20 w-20 md:h-28 md:w-28 items-center justify-center rounded-full bg-white dark:bg-neutral-800 shadow-lg border-2 border-gold/40 relative">
+<div class="absolute inset-1 rounded-full border border-gold/20"></div>
+<p class="text-3xl md:text-5xl font-serif font-bold text-primary">45</p>
+</div>
+<span class="text-sm md:text-base font-serif font-semibold uppercase tracking-widest text-gold-dark">Phút</span>
+</div>
+<div class="flex flex-col items-center gap-3">
+<div class="flex h-20 w-20 md:h-28 md:w-28 items-center justify-center rounded-full bg-white dark:bg-neutral-800 shadow-lg border-2 border-gold/40 relative">
+<div class="absolute inset-1 rounded-full border border-gold/20"></div>
+<p class="text-3xl md:text-5xl font-serif font-bold text-primary">00</p>
+</div>
+<span class="text-sm md:text-base font-serif font-semibold uppercase tracking-widest text-gold-dark">Giây</span>
+</div>
+</div>
+</div>
+</section>
+<section class="w-full max-w-[800px] px-4 py-12" id="timeline">
+<div class="mb-12 flex flex-col items-center justify-center gap-2 text-center">
+<span class="material-symbols-outlined text-gold text-4xl mb-2">event_available</span>
+<h2 class="text-4xl md:text-5xl font-serif font-bold leading-tight text-primary dark:text-white uppercase tracking-wide">Chương Trình Lễ Cưới</h2>
+<div class="h-1 w-24 bg-gold mt-2 rounded-full"></div>
+</div>
+<div class="grid grid-cols-[80px_1fr] gap-x-6">
+<div class="flex flex-col items-center gap-2 pt-2">
+<div class="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 z-10 border-2 border-gold">
+<span class="material-symbols-outlined text-2xl">local_shipping</span>
+</div>
+<div class="w-[2px] grow bg-gradient-to-b from-gold to-gold/30 h-20"></div>
+</div>
+<div class="flex flex-col pb-12 pt-2">
+<span class="text-lg font-bold text-gold font-serif">09:00</span>
+<h3 class="text-3xl font-script text-primary dark:text-white mt-1">Lễ Rước Dâu</h3>
+<p class="text-neutral-600 dark:text-neutral-400 mt-2 text-lg leading-relaxed">Nghi thức rước dâu truyền thống tại tư gia nhà gái. Khoảnh khắc thiêng liêng và ấm cúng.</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-[2px] h-6 bg-gold/30"></div>
+<div class="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 z-10 border-2 border-gold">
+<span class="material-symbols-outlined text-2xl">groups</span>
+</div>
+<div class="w-[2px] grow bg-gradient-to-b from-gold/30 to-gold h-20"></div>
+</div>
+<div class="flex flex-col pb-12 pt-2">
+<span class="text-lg font-bold text-gold font-serif">11:00</span>
+<h3 class="text-3xl font-script text-primary dark:text-white mt-1">Đón Khách</h3>
+<p class="text-neutral-600 dark:text-neutral-400 mt-2 text-lg leading-relaxed">Cô dâu chú rể chụp ảnh lưu niệm cùng quan khách và người thân tại sảnh tiệc chính.</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-[2px] h-6 bg-gold"></div>
+<div class="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 z-10 border-2 border-gold">
+<span class="material-symbols-outlined text-2xl">celebration</span>
+</div>
+</div>
+<div class="flex flex-col pb-8 pt-2">
+<span class="text-lg font-bold text-gold font-serif">12:00</span>
+<h3 class="text-3xl font-script text-primary dark:text-white mt-1">Khai Tiệc</h3>
+<p class="text-neutral-600 dark:text-neutral-400 mt-2 text-lg leading-relaxed">Bắt đầu chương trình lễ cưới long trọng và mời quý khách dùng tiệc mặn.</p>
+</div>
+</div>
+</section>
+<section class="w-full bg-white dark:bg-neutral-900 py-20 relative" id="album">
+<div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
+<div class="mx-auto flex max-w-[1200px] flex-col px-4 md:px-10">
+<div class="mb-14 text-center">
+<h2 class="text-5xl font-script text-primary dark:text-gold mb-3">Album Hình Cưới</h2>
+<p class="text-xl text-neutral-500 dark:text-neutral-400 font-serif italic">Những khoảnh khắc ngọt ngào của chúng mình</p>
+</div>
+<div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 lg:gap-10">
+<div class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-sm bg-neutral-100 shadow-xl border-[6px] border-white dark:border-neutral-800 outline outline-1 outline-gold/30">
+<div class="h-full w-full bg-cover bg-center transition-transform duration-700 ease-in-out group-hover:scale-110" data-alt="Bride and groom laughing together outdoors" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCXoaCOTE6skIQ0gBDV7rfeI56qsGc_r0SaZ_dLNV1-hP43n1HheuNxppql5pLFx4nmi7dHH7mitK-B2iIjUGAkQb1sUurOibjMX8kF6FVtfGbWDfcLEzit-xcndC44HBKWim6UZCrC0cSvhvipnpNXs9Eq0iXR3AAT9l3lsmke7_pzmWAZrkaSKLCYV4ED2VVwJHrQ1SY7X9JW4V34KQmiVD31TkHlxySliPhW4Bj92DHsYOVSz-z--W6FBbelgh4vyBEaylZs-cg");'></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-sm bg-neutral-100 shadow-xl border-[6px] border-white dark:border-neutral-800 outline outline-1 outline-gold/30">
+<div class="h-full w-full bg-cover bg-center transition-transform duration-700 ease-in-out group-hover:scale-110" data-alt="Close up of wedding rings on hands" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAwhhIIACFKCRzWoVmmmSO3LT2QU6oCN0qBu2wltP1ccnSrq15mz6kJIkVFp4PFXgViD1Bai3zuGiYQvH6w10h2M33cMfXGjPrlKDprskZ97msAcffDfXJV5rAD9P7kb-pzNa_AeZoLP1eAYD_eFkp5EniXpzabMWnS1CW1PfBE60QV2CmzPOQcwrZrX2VXCxfaXLNT67rGit_mdIPpaSdkB_FHRpshuAPL2bCJEarnl5CZSSYaE6cyREJBm9vGc6dOG_35VIlLwl4");'></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-sm bg-neutral-100 shadow-xl border-[6px] border-white dark:border-neutral-800 outline outline-1 outline-gold/30">
+<div class="h-full w-full bg-cover bg-center transition-transform duration-700 ease-in-out group-hover:scale-110" data-alt="Couple walking down the aisle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAIAhhfiPEitbtZpzunxxNyMtL7IOkMXWEKpq_GbVdQizLMrwblvFyk03eHaSgETdNyV146Im3GBk2aivt29a_SgklOnyVEEI2LdbCAK7qETpKLkU-sU6Awed5_CtOW4Eio8bCdV3jDmD_Zi7ESWjGrJX-7kCQ-nVKQGQCUfzmUcwivtvf4wRnIENaAEq96KeqM-Q2UvzBmnsl0b223Pzbi08cKKCc7bzGOxQsZUyV079Rzg4Tpdc1DuQ9l3htih3opLbJXky1HjIg");'></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-sm bg-neutral-100 shadow-xl border-[6px] border-white dark:border-neutral-800 outline outline-1 outline-gold/30">
+<div class="h-full w-full bg-cover bg-center transition-transform duration-700 ease-in-out group-hover:scale-110" data-alt="Bride holding bouquet" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC8CeVTYzKGOyd0Ay-oMZByvL52iEXgQxI69_fc2Uon6HL7pFfJEMlG-ZEFVpBDa-M2l5PmUi3cPalZJuroQbHYMa40-NSnsSpBtCKRvTP7crsTkbNpM_to2KZUecyW9GYGJL3u0QWOZJQTVGhmwO8GdHp-J6GfxlFeB6J-0vTjW2w3dIWhJ1oKohQxQSmln2Se8VaRNrZda1aHSfkq5KkLnMXkAGyArpo5hvhWmV75rvyewwUUo1LFwV9pGwX_2DuzOLkWrL9XzE8");'></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-sm bg-neutral-100 shadow-xl border-[6px] border-white dark:border-neutral-800 outline outline-1 outline-gold/30">
+<div class="h-full w-full bg-cover bg-center transition-transform duration-700 ease-in-out group-hover:scale-110" data-alt="Wedding venue decoration details" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCTrc_gS5OdLF5L7EcSTv94ouXubE7kptryodIt7y5o10LH181v4llZGlo9sBxn8mwBuYE2PAN6QfHQlEbM0dM0Wr33viU0ixV5ILzJAF5_qgUTg2PCJaiFGpDIIEysSKTXnAD1wqQmiStoHe_lKtv1euXxh17GQ-ikaY-cLc9RpNzBRSNXX7BbVYlJen3YkKopCcvweLOmgra3kgkdZaO31nvVV47fHPFYY1YS8NZw6gLGny2_DKQZ1aps0sO2E1cvBN1N-jeIp9w");'></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-sm bg-neutral-100 shadow-xl border-[6px] border-white dark:border-neutral-800 outline outline-1 outline-gold/30">
+<div class="h-full w-full bg-cover bg-center transition-transform duration-700 ease-in-out group-hover:scale-110" data-alt="Couple dancing at sunset" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBh3WclkdDD4lS6Hk5b3a6EfSblZ_IlvCjEiLDRyvH8ZcSoPL2kV9UF9a3GNTbNs5OJkxRkbudnEduHUxVYroO1xMBTbnKlY5OixDrELBo6Etdkd5CI_H7rSexpk1xZuM_nISiBptrepKOLenDwJf9wtKUfgp5I3IMCoQbqao-HrVshM4T6KGKILvGqv03MIatSouBbGF2xTxUex8tZehWptksSYWfHYnT2jTSYTcCreDc7dUoz9Q2wet0tNj_NAlKeiHM9FKf3lTc");'></div>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+</div>
+<div class="mt-12 flex justify-center">
+<button class="flex items-center gap-2 rounded-full border border-gold bg-transparent px-8 py-3 text-base font-serif font-bold text-primary shadow-sm hover:bg-gold hover:text-white dark:border-gold dark:text-gold dark:hover:bg-gold dark:hover:text-neutral-900 transition-all duration-300 uppercase tracking-wide">
+<span class="material-symbols-outlined text-[20px]">photo_library</span>
+                            Xem tất cả hình ảnh
+                        </button>
+</div>
+</div>
+</section>
+<section class="w-full max-w-[1200px] px-4 py-16 md:px-10" id="map">
+<div class="overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-neutral-800 border border-gold/20">
+<div class="flex flex-col md:flex-row">
+<div class="flex flex-1 flex-col justify-center p-8 md:p-12">
+<div class="flex items-center gap-2 mb-4">
+<div class="h-[1px] w-10 bg-gold"></div>
+<span class="text-sm font-bold uppercase tracking-widest text-primary">Địa điểm tổ chức</span>
+</div>
+<h2 class="mb-4 text-4xl font-serif font-bold text-neutral-900 dark:text-white leading-tight">Trung Tâm Hội Nghị <br/><span class="text-gold">White Palace</span></h2>
+<p class="mb-8 text-xl text-neutral-600 dark:text-neutral-300 font-serif leading-relaxed">
+                                194 Hoàng Văn Thụ, Phường 9, Phú Nhuận<br/>
+                                Thành phố Hồ Chí Minh
+                            </p>
+<div class="flex flex-col gap-5">
+<a class="flex w-fit items-center gap-3 rounded-full bg-primary px-8 py-4 font-bold text-white transition-colors hover:bg-red-800 shadow-lg shadow-primary/30" href="#">
+<span class="material-symbols-outlined">directions</span>
+                                    Chỉ đường
+                                </a>
+<div class="flex items-center gap-2 text-base text-neutral-600 dark:text-neutral-400 font-serif italic">
+<span class="material-symbols-outlined text-[20px] text-gold">phone</span>
+                                    Liên hệ: <span class="font-bold">090 123 4567</span> (Chú rể)
+                                </div>
+</div>
+</div>
+<div class="relative min-h-[350px] flex-1 bg-neutral-200">
+<div class="absolute inset-0 bg-cover bg-center grayscale hover:grayscale-0 transition-all duration-700" data-alt="Map location of the wedding venue" data-location="Ho Chi Minh City Map" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBwMeXntiAmHE4QUEN5lk1vxU_vJWWE-xcHscmwLv_8_EpKJ9000w1wAzo1kIRQ7uSvQPIGI60JDdzI4pjdDUEaOVLKQmeS9SZJcs2mAPmRHMC6GRRRiqHeSUtHz7oW6l_KV_YXz9lY1fQN41f5bj4Q-0KZ1Boit5qRMopE_pnetzKzgBW6aDHFASKTscvkcD4PtKphYCI2WOjPR2U7LB2mqXnCvTbQPp2FpAjcmO0AkiSfxq7IfPQRzkZGEM0WxEYrAvGDig4IGRA");'>
+</div>
+<div class="absolute inset-0 flex items-center justify-center bg-primary/10 pointer-events-none">
+<div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-xl animate-bounce border-4 border-white">
+<span class="material-symbols-outlined text-[32px]">location_on</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="w-full max-w-[960px] px-4 py-20" id="gift">
+<div class="flex flex-col items-center gap-12">
+<div class="text-center max-w-2xl">
+<div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-gold/10 text-gold mb-6 border border-gold/30">
+<span class="material-symbols-outlined text-[32px]">volunteer_activism</span>
+</div>
+<h2 class="text-5xl font-script font-bold text-primary dark:text-gold mb-4">Hộp Mừng Cưới</h2>
+<p class="text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed font-serif">
+                            Sự hiện diện của quý khách là món quà trân quý nhất đối với chúng tôi. <br/>Nếu muốn gửi quà chúc phúc, quý khách có thể quét mã QR dưới đây.
+                        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+<div class="relative w-full overflow-hidden rounded-2xl bg-white p-8 shadow-2xl border border-gold/20 dark:bg-neutral-800">
+<div class="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/10 blur-xl"></div>
+<div class="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-primary/5 blur-xl"></div>
+<div class="relative flex flex-col items-center z-10">
+<h3 class="mb-1 text-2xl font-serif font-bold text-primary uppercase tracking-wider">Nhà Trai</h3>
+<div class="mb-4 text-sm font-medium uppercase text-gold tracking-widest">Vietcombank</div>
+<div class="mb-6 h-56 w-56 rounded-xl bg-white p-3 shadow-inner border border-neutral-100 ring-4 ring-gold/10">
+<div class="h-full w-full bg-[url('https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=GroomBankTransfer')] bg-contain bg-center bg-no-repeat" data-alt="QR Code for groom bank transfer"></div>
+</div>
+<div class="w-full space-y-4 rounded-xl bg-background-light p-6 dark:bg-neutral-700/30 border border-neutral-100 dark:border-neutral-700">
+<div class="flex justify-between border-b border-dashed border-neutral-200 pb-3 dark:border-neutral-600">
+<span class="text-base text-neutral-500 dark:text-neutral-400 font-serif italic">Chủ tài khoản:</span>
+<span class="font-bold text-neutral-900 dark:text-white uppercase font-serif tracking-wide">Nguyen Van A</span>
+</div>
+<div class="flex justify-between items-center pt-1">
+<span class="text-base text-neutral-500 dark:text-neutral-400 font-serif italic">Số tài khoản:</span>
+<div class="flex items-center gap-3">
+<span class="font-bold text-primary text-lg font-mono">1234 5678 9999</span>
+<button class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gold/10 text-neutral-400 hover:text-gold transition-colors" title="Sao chép">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative w-full overflow-hidden rounded-2xl bg-white p-8 shadow-2xl border border-gold/20 dark:bg-neutral-800">
+<div class="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/10 blur-xl"></div>
+<div class="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-primary/5 blur-xl"></div>
+<div class="relative flex flex-col items-center z-10">
+<h3 class="mb-1 text-2xl font-serif font-bold text-primary uppercase tracking-wider">Nhà Gái</h3>
+<div class="mb-4 text-sm font-medium uppercase text-gold tracking-widest">Techcombank</div>
+<div class="mb-6 h-56 w-56 rounded-xl bg-white p-3 shadow-inner border border-neutral-100 ring-4 ring-gold/10">
+<div class="h-full w-full bg-[url('https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=BrideBankTransfer')] bg-contain bg-center bg-no-repeat" data-alt="QR Code for bride bank transfer"></div>
+</div>
+<div class="w-full space-y-4 rounded-xl bg-background-light p-6 dark:bg-neutral-700/30 border border-neutral-100 dark:border-neutral-700">
+<div class="flex justify-between border-b border-dashed border-neutral-200 pb-3 dark:border-neutral-600">
+<span class="text-base text-neutral-500 dark:text-neutral-400 font-serif italic">Chủ tài khoản:</span>
+<span class="font-bold text-neutral-900 dark:text-white uppercase font-serif tracking-wide">Tran Thi B</span>
+</div>
+<div class="flex justify-between items-center pt-1">
+<span class="text-base text-neutral-500 dark:text-neutral-400 font-serif italic">Số tài khoản:</span>
+<div class="flex items-center gap-3">
+<span class="font-bold text-primary text-lg font-mono">8888 6666 2222</span>
+<button class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gold/10 text-neutral-400 hover:text-gold transition-colors" title="Sao chép">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p class="text-center text-sm italic text-neutral-500 font-serif mt-4">
+                        Xin chân thành cảm ơn tình cảm của quý khách
+                    </p>
+</div>
+</section>
+</main>
+<footer class="mt-10 border-t border-gold/30 bg-white py-12 text-center dark:border-neutral-800 dark:bg-neutral-900 relative">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-neutral-900 px-4">
+<span class="material-symbols-outlined text-gold text-3xl">favorite</span>
+</div>
+<div class="px-4">
+<p class="text-4xl font-script text-primary dark:text-gold mb-4">Nguyễn Văn A &amp; Trần Thị B</p>
+<p class="mt-2 text-lg text-neutral-600 dark:text-neutral-400 font-serif italic">Rất hân hạnh được đón tiếp quý khách.</p>
+<p class="mt-10 text-xs text-neutral-400 uppercase tracking-widest">© 2024 Thiệp Cưới Online. All rights reserved.</p>
+</div>
+</footer>
+</div>
+
+</body></html>

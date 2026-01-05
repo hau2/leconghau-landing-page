@@ -147,7 +147,7 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent z-10"></div>
                       <div className="absolute bottom-6 left-6 z-20 text-white">
                         <p className="text-sm font-light opacity-90 tracking-widest uppercase">
-                          Senior Developer
+                          Developer
                         </p>
                         <p className="text-3xl font-bold">Lê Công Hậu</p>
                       </div>
@@ -861,7 +861,7 @@ export default function HomePage() {
                         Lê Công Hậu
                       </h4>
                       <p className="text-primary font-medium">
-                        Senior Fullstack Developer
+                        Fullstack Developer
                       </p>
                       <div className="flex gap-2 mt-2">
                         <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-semibold text-slate-600 dark:text-slate-300">

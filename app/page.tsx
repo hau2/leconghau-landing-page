@@ -1238,13 +1238,6 @@ export default function HomePage() {
             <p className="text-slate-500 dark:text-slate-500 text-sm">
               © 2023 LeCongHau.Dev. All rights reserved.
             </p>
-            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-500">
-              <span>Made with</span>
-              <span className="material-symbols-outlined text-red-500 text-sm">
-                favorite
-              </span>
-              <span>for Vietnam SMEs</span>
-            </div>
           </div>
         </div>
       </footer>

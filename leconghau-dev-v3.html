@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lê Công Hậu — Full Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ======================================================
+   ROOT & RESET
+   ====================================================== */
+:root {
+  --bg: #030712;
+  --bg2: #070c18;
+  --card: rgba(12, 18, 32, 0.7);
+  --card-solid: #0c1220;
+  --glass: rgba(15, 23, 42, 0.55);
+  --glass-border: rgba(255,255,255,0.06);
+  --glass-shine: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --accent: #00f0ff;
+  --accent2: #6366f1;
+  --accent3: #a855f7;
+  --accent4: #ec4899;
+  --accent5: #f59e0b;
+  --green: #22c55e;
+  --red: #ef4444;
+  --text: #f1f5f9;
+  --text2: #cbd5e1;
+  --text3: #64748b;
+  --text4: #334155;
+  --glow-cyan: rgba(0,240,255,0.15);
+  --glow-purple: rgba(168,85,247,0.12);
+  --gradient-main: linear-gradient(135deg, #00f0ff, #6366f1, #a855f7);
+  --gradient-warm: linear-gradient(135deg, #f59e0b, #ef4444, #ec4899);
+  --gradient-cool: linear-gradient(135deg, #00f0ff, #22c55e);
+  --font: 'Sora', system-ui, sans-serif;
+  --mono: 'Fira Code', 'SF Mono', monospace;
+  --r: 20px;
+  --r-sm: 12px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text4); border-radius: 5px; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ======================================================
+   GLOBAL ANIMATED GRADIENT MESH BG
+   ====================================================== */
+.mesh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.25;
+  animation: meshFloat 20s ease-in-out infinite;
+}
+
+.mesh-blob:nth-child(1) {
+  width: 600px; height: 600px;
+  background: var(--accent);
+  top: -10%; left: -5%;
+  animation-delay: 0s;
+}
+
+.mesh-blob:nth-child(2) {
+  width: 500px; height: 500px;
+  background: var(--accent2);
+  top: 30%; right: -10%;
+  animation-delay: -5s;
+  animation-duration: 25s;
+}
+
+.mesh-blob:nth-child(3) {
+  width: 450px; height: 450px;
+  background: var(--accent4);
+  bottom: -5%; left: 20%;
+  animation-delay: -10s;
+  animation-duration: 22s;
+}
+
+.mesh-blob:nth-child(4) {
+  width: 350px; height: 350px;
+  background: var(--accent3);
+  top: 60%; left: 50%;
+  animation-delay: -15s;
+  animation-duration: 28s;
+}
+
+@keyframes meshFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(60px, -40px) scale(1.1); }
+  50% { transform: translate(-30px, 50px) scale(0.9); }
+  75% { transform: translate(40px, 20px) scale(1.05); }
+}
+
+/* Noise overlay */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px;
+}
+
+/* ======================================================
+   LOADING SCREEN
+   ====================================================== */
+.loader-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s, visibility 0.6s;
+}
+
+.loader-screen.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-logo {
+  font-family: var(--mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: loaderFadeIn 0.5s 0.2s forwards;
+}
+
+.loader-logo .bracket { color: var(--accent); }
+
+.loader-bar-track {
+  width: 200px;
+  height: 3px;
+  background: var(--text4);
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0;
+  animation: loaderFadeIn 0.5s 0.4s forwards;
+}
+
+.loader-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--gradient-main);
+  border-radius: 3px;
+  animation: loaderFill 1.8s 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+.loader-text {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text4);
+  margin-top: 16px;
+  opacity: 0;
+  animation: loaderFadeIn 0.5s 0.6s forwards;
+}
+
+.loader-text span {
+  color: var(--accent);
+}
+
+@keyframes loaderFadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes loaderFill {
+  to { width: 100%; }
+}
+
+/* ======================================================
+   MOBILE MENU OVERLAY
+   ====================================================== */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(3,7,18,0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s;
+}
+
+.mobile-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-overlay a {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text2);
+  padding: 14px 32px;
+  border-radius: 12px;
+  transition: all 0.25s;
+  transform: translateY(16px);
+  opacity: 0;
+}
+
+.mobile-overlay.open a {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mobile-overlay.open a:nth-child(1) { transition-delay: 0.05s; }
+.mobile-overlay.open a:nth-child(2) { transition-delay: 0.1s; }
+.mobile-overlay.open a:nth-child(3) { transition-delay: 0.15s; }
+.mobile-overlay.open a:nth-child(4) { transition-delay: 0.2s; }
+.mobile-overlay.open a:nth-child(5) { transition-delay: 0.25s; }
+.mobile-overlay.open a:nth-child(6) { transition-delay: 0.3s; }
+.mobile-overlay.open a:nth-child(7) { transition-delay: 0.35s; }
+
+.mobile-overlay a:hover {
+  color: var(--accent);
+  background: var(--glow-cyan);
+}
+
+.mobile-overlay a.mob-cta {
+  margin-top: 12px;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+}
+
+.mobile-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: all 0.2s;
+}
+
+.mobile-close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Typing text for section descriptions */
+.typed-text {
+  font-family: var(--mono);
+  color: var(--accent);
+  border-right: 2px solid var(--accent);
+  padding-right: 4px;
+  animation: typeBlink 0.8s step-end infinite;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.typed-text.done {
+  border-right-color: transparent;
+}
+
+@keyframes typeBlink {
+  0%, 100% { border-right-color: var(--accent); }
+  50% { border-right-color: transparent; }
+}
+
+/* ======================================================
+   FLOATING CONTACT
+   ====================================================== */
+.float-contacts {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-end;
+}
+
+.float-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.float-btn:hover {
+  transform: scale(1.18) translateY(-4px);
+}
+
+.float-btn.phone-btn {
+  background: linear-gradient(135deg, #22c55e, #00f0ff);
+  box-shadow: 0 8px 32px rgba(0,240,255,0.25);
+}
+
+.float-btn.zalo-btn {
+  background: linear-gradient(135deg, #0068ff, #00b4ff);
+  box-shadow: 0 8px 32px rgba(0,104,255,0.25);
+}
+
+.float-btn.fb-btn {
+  background: linear-gradient(135deg, #1877f2, #42a5f5);
+  box-shadow: 0 8px 32px rgba(24,119,242,0.25);
+}
+
+.float-btn svg, .float-btn .material-icons-round {
+  font-size: 1.35rem;
+}
+
+.float-tip {
+  position: absolute;
+  right: 68px;
+  background: var(--card-solid);
+  border: 1px solid var(--border-hover);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 10px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(10px);
+  transition: all 0.3s;
+  backdrop-filter: blur(12px);
+}
+
+.float-btn:hover .float-tip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Phone pulse ring */
+.float-btn.phone-btn::before,
+.float-btn.phone-btn::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  opacity: 0;
+  animation: pulsering 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.float-btn.phone-btn::after {
+  animation-delay: 1.25s;
+}
+
+@keyframes pulsering {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ======================================================
+   NAV
+   ====================================================== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(3, 7, 18, 0.7);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.logo .bracket { color: var(--accent); }
+.logo .dot { color: var(--text4); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text3);
+  padding: 8px 18px;
+  border-radius: 10px;
+  transition: all 0.25s;
+}
+
+.nav-links a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+}
+
+.nav-cta {
+  background: var(--accent) !important;
+  color: var(--bg) !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 0 20px var(--glow-cyan);
+  transition: all 0.3s !important;
+}
+
+.nav-cta:hover {
+  box-shadow: 0 0 40px var(--glow-cyan), 0 4px 20px rgba(0,240,255,0.2) !important;
+  transform: translateY(-1px);
+}
+
+.menu-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  font-size: 1.5rem;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ======================================================
+   HERO
+   ====================================================== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 110px 2rem 90px;
+  overflow: hidden;
+}
+
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-grad {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 15% 45%, rgba(0,240,255,0.08), transparent 60%),
+    radial-gradient(ellipse 50% 50% at 85% 30%, rgba(99,102,241,0.06), transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 90%, rgba(168,85,247,0.05), transparent 60%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--glow-cyan);
+  border: 1px solid rgba(0,240,255,0.15);
+  padding: 8px 20px;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(8px);
+  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.85)} }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Typing H1 */
+.hero h1 {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.gradient-text {
+  background: var(--gradient-main);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 5s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.9em;
+  background: var(--accent);
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  animation: cursorBlink 1s step-end infinite;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+@keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.hero-p {
+  font-size: 1.1rem;
+  color: var(--text2);
+  line-height: 1.85;
+  margin-bottom: 2rem;
+  max-width: 540px;
+  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 2.5rem;
+  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--font);
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn-glow:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 40px rgba(0,240,255,0.35), 0 0 60px rgba(0,240,255,0.15);
+}
+
+.btn-glow:hover::before { opacity: 1; }
+
+.btn-ghost {
+  background: var(--glass);
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px var(--glow-cyan);
+}
+
+/* Hero Stats with counter */
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+.h-stat {
+  padding-left: 16px;
+  position: relative;
+}
+
+.h-stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--gradient-main);
+}
+
+.h-stat-num {
+  font-family: var(--mono);
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.h-stat-label {
+  font-size: 0.78rem;
+  color: var(--text3);
+}
+
+/* Terminal Card */
+.hero-card {
+  animation: slideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4), inset 0 1px 0 var(--glass-shine);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.t-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.015);
+}
+
+.t-dot { width: 12px; height: 12px; border-radius: 50%; }
+.t-dot.r { background: #ff5f57; box-shadow: 0 0 6px rgba(255,95,87,0.4); }
+.t-dot.y { background: #ffbd2e; box-shadow: 0 0 6px rgba(255,189,46,0.4); }
+.t-dot.g { background: #28c840; box-shadow: 0 0 6px rgba(40,200,64,0.4); }
+
+.t-title {
+  flex: 1;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text4);
+}
+
+.t-body {
+  padding: 22px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 2.1;
+}
+
+.tl { opacity: 0; animation: typeIn 0.3s ease forwards; }
+.tl:nth-child(1){animation-delay:.6s}
+.tl:nth-child(2){animation-delay:.8s}
+.tl:nth-child(3){animation-delay:1s}
+.tl:nth-child(4){animation-delay:1.2s}
+.tl:nth-child(5){animation-delay:1.4s}
+.tl:nth-child(6){animation-delay:1.6s}
+.tl:nth-child(7){animation-delay:1.8s}
+.tl:nth-child(8){animation-delay:2s}
+.tl:nth-child(9){animation-delay:2.2s}
+
+@keyframes typeIn {
+  from { opacity:0; transform:translateX(-8px) }
+  to { opacity:1; transform:translateX(0) }
+}
+
+.cc { color: var(--accent); }
+.cb { color: #818cf8; }
+.cs { color: #a5d6ff; }
+.co { color: #fbbf24; }
+.cd { color: var(--text4); }
+.cg { color: var(--green); }
+
+.t-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--border);
+  background: rgba(0,240,255,0.02);
+}
+
+.t-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 20px var(--glow-cyan);
+  object-fit: cover;
+}
+
+.t-name { font-weight: 600; font-size: 0.92rem; }
+.t-role { font-size: 0.75rem; color: var(--text3); }
+
+/* ======================================================
+   SECTIONS GENERAL
+   ====================================================== */
+section { position: relative; z-index: 2; padding: 120px 2rem; }
+
+.sec-container { max-width: 1280px; margin: 0 auto; }
+
+.sec-header { margin-bottom: 4rem; }
+
+.sec-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sec-eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.sec-title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.sec-desc {
+  font-size: 1.05rem;
+  color: var(--text3);
+  max-width: 580px;
+}
+
+/* ======================================================
+   3D TILT + GLOW BORDER CARDS
+   ====================================================== */
+.g-card {
+  position: relative;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: box-shadow 0.4s;
+}
+
+.g-card:hover {
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.3),
+    0 0 60px var(--glow-cyan),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* Animated gradient border on hover */
+.g-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r);
+  padding: 1.5px;
+  background: conic-gradient(from var(--card-angle, 0deg), var(--accent), var(--accent2), var(--accent3), var(--accent4), var(--accent));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s;
+  animation: spinBorder 4s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.g-card:hover::before { opacity: 1; }
+
+@property --card-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spinBorder {
+  to { --card-angle: 360deg; }
+}
+
+/* Shine / light follow */
+.card-light {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background: radial-gradient(700px circle at var(--lx, 50%) var(--ly, 50%), rgba(0,240,255,0.07), transparent 40%);
+}
+
+.g-card:hover .card-light { opacity: 1; }
+
+/* ======================================================
+   SERVICES
+   ====================================================== */
+.srv-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.srv-card { padding: 28px; }
+
+.srv-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+  background: var(--glow-cyan);
+  border: 1px solid rgba(0,240,255,0.1);
+  transition: all 0.3s;
+}
+
+.g-card:hover .srv-icon {
+  box-shadow: 0 0 24px var(--glow-cyan);
+  transform: translateZ(20px);
+}
+
+.srv-file {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text4);
+  margin-bottom: 10px;
+}
+
+.srv-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+
+.srv-list {
+  list-style: none;
+  font-size: 0.88rem;
+  color: var(--text2);
+}
+
+.srv-list li {
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.srv-list .ck { color: var(--accent); font-size: 0.8rem; }
+
+/* ======================================================
+   TEMPLATES
+   ====================================================== */
+.tmpl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.tmpl-card { overflow: hidden; }
+
+.tmpl-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.015);
+}
+
+.tmpl-dots { display: flex; gap: 5px; }
+.tmpl-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.tmpl-dots .r{background:#ff5f57} .tmpl-dots .y{background:#ffbd2e} .tmpl-dots .g{background:#28c840}
+
+.tmpl-url {
+  flex: 1;
+  background: rgba(0,0,0,0.4);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text4);
+}
+
+.tmpl-preview {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(0,240,255,0.03), rgba(99,102,241,0.03));
+}
+
+/* Shimmer effect */
+.tmpl-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.03) 45%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 55%, transparent 60%);
+  background-size: 250% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.tmpl-preview .p-icon {
+  font-size: 3.5rem;
+  color: var(--text4);
+  opacity: 0.2;
+  z-index: 1;
+  transition: all 0.4s;
+}
+
+.g-card:hover .p-icon {
+  opacity: 0.4;
+  transform: scale(1.1);
+}
+
+.tmpl-body { padding: 20px; }
+
+.tmpl-tag {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  padding: 4px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.tmpl-tag.wedding { color: var(--accent4); background: rgba(236,72,153,0.1); }
+.tmpl-tag.realestate { color: var(--accent5); background: rgba(245,158,11,0.1); }
+.tmpl-tag.corporate { color: var(--accent2); background: rgba(99,102,241,0.1); }
+
+.tmpl-body h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.tmpl-body p { font-size: 0.84rem; color: var(--text3); margin-bottom: 14px; }
+
+.tmpl-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tmpl-sold { font-family: var(--mono); font-size: 0.72rem; color: var(--green); }
+
+.tmpl-link {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  padding: 6px 16px;
+  border: 1px solid rgba(0,240,255,0.2);
+  border-radius: 8px;
+  transition: all 0.25s;
+}
+
+.tmpl-link:hover {
+  background: var(--glow-cyan);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px var(--glow-cyan);
+}
+
+/* ======================================================
+   CASES
+   ====================================================== */
+.case-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.case-card { overflow: hidden; }
+
+.case-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.01);
+}
+
+.case-emoji {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.case-emoji.fnb { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.15); }
+.case-emoji.seo { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.15); }
+
+.case-branch { font-family: var(--mono); font-size: 0.8rem; color: var(--accent3); }
+.case-loc { font-size: 0.75rem; color: var(--text4); }
+
+.case-body { padding: 24px; }
+.case-body h3 { font-size: 1.08rem; font-weight: 700; margin-bottom: 16px; }
+
+.case-block { margin-bottom: 14px; }
+
+.case-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.case-label.warn { color: var(--accent5); }
+.case-label.ok { color: var(--green); }
+
+.case-block p { font-size: 0.86rem; color: var(--text3); }
+
+.case-nums {
+  display: flex;
+  gap: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.case-num-val {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.case-num-desc { font-size: 0.72rem; color: var(--text4); }
+
+/* ======================================================
+   PIPELINE
+   ====================================================== */
+.pipe-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  position: relative;
+}
+
+/* Connecting line */
+.pipe-grid::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3), var(--accent4), var(--green));
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.pipe-stage {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  padding: 28px 18px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+.pipe-stage::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-main);
+  background-size: 300% 100%;
+  animation: gradientShift 3s ease infinite;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.pipe-stage:hover {
+  transform: translateY(-8px) scale(1.03);
+  border-color: var(--border-hover);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3), 0 0 30px var(--glow-cyan);
+}
+
+.pipe-stage:hover::after { opacity: 1; }
+
+.pipe-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text4);
+  margin-bottom: 8px;
+}
+
+.pipe-emoji { font-size: 1.8rem; margin-bottom: 10px; }
+
+.pipe-stage h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; }
+.pipe-stage p { font-size: 0.78rem; color: var(--text3); line-height: 1.5; }
+
+.pipe-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--green);
+  background: rgba(34,197,94,0.1);
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-top: 12px;
+}
+
+/* ======================================================
+   ABOUT
+   ====================================================== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-card-inner {
+  padding: 32px;
+  text-align: center;
+}
+
+.about-av {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 40px var(--glow-cyan), 0 0 80px rgba(0,240,255,0.08);
+  margin: 0 auto 16px;
+  object-fit: cover;
+}
+
+.about-nm { font-size: 1.3rem; font-weight: 800; }
+
+.about-hd {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.about-bgs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.about-bg {
+  font-size: 0.72rem;
+  padding: 5px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  background: rgba(255,255,255,0.02);
+}
+
+.about-qt {
+  font-size: 0.88rem;
+  color: var(--text3);
+  font-style: italic;
+  border-left: 3px solid var(--accent);
+  padding-left: 16px;
+  text-align: left;
+  line-height: 1.7;
+}
+
+.about-right .sec-title { margin-bottom: 16px; }
+
+.about-txt {
+  font-size: 0.95rem;
+  color: var(--text2);
+  margin-bottom: 14px;
+  line-height: 1.85;
+}
+
+.val-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.val-item {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  padding: 18px;
+  transition: all 0.3s;
+}
+
+.val-item:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-hover);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.val-item h4 { font-size: 0.88rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.val-item p { font-size: 0.78rem; color: var(--text3); }
+
+.tech-sec { margin-top: 28px; }
+
+.tech-lbl {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text4);
+  margin-bottom: 12px;
+}
+
+.tech-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tech-pill {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: default;
+}
+
+.tech-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--glow-cyan);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 24px var(--glow-cyan);
+}
+
+/* ======================================================
+   PRICING
+   ====================================================== */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.price-card {
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s;
+}
+
+.price-card.featured {
+  border-color: rgba(0,240,255,0.2);
+  box-shadow: 0 0 60px var(--glow-cyan), 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.price-card.featured .price-header {
+  background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(99,102,241,0.06));
+}
+
+.price-header {
+  padding: 32px 28px 24px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.price-popular {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 4px 12px;
+  border-radius: 100px;
+  box-shadow: 0 0 16px var(--glow-cyan);
+}
+
+.price-name {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.price-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.price-amount .currency {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text3);
+}
+
+.price-amount .value {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.price-amount .unit {
+  font-size: 0.88rem;
+  color: var(--text4);
+}
+
+.price-desc {
+  font-size: 0.84rem;
+  color: var(--text3);
+}
+
+.price-body {
+  padding: 24px 28px;
+}
+
+.price-features {
+  list-style: none;
+  margin-bottom: 24px;
+}
+
+.price-features li {
+  padding: 8px 0;
+  font-size: 0.88rem;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.price-features li:last-child { border-bottom: none; }
+
+.price-features .feat-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.feat-icon.yes {
+  background: rgba(34,197,94,0.12);
+  color: var(--green);
+}
+
+.feat-icon.no {
+  background: rgba(239,68,68,0.08);
+  color: var(--red);
+  opacity: 0.5;
+}
+
+.price-features li.disabled {
+  color: var(--text4);
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.price-cta {
+  width: 100%;
+  padding: 14px;
+  font-family: var(--font);
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  text-decoration: none;
+}
+
+.price-cta.primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.price-cta.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(0,240,255,0.35);
+}
+
+.price-cta.outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border-hover);
+}
+
+.price-cta.outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px var(--glow-cyan);
+}
+
+.price-note {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.84rem;
+  color: var(--text4);
+}
+
+.price-note span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ======================================================
+   TESTIMONIALS
+   ====================================================== */
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.testi-card {
+  padding: 28px;
+  position: relative;
+}
+
+.testi-stars {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 16px;
+}
+
+.testi-star {
+  color: var(--accent5);
+  font-size: 1rem;
+}
+
+.testi-text {
+  font-size: 0.92rem;
+  color: var(--text2);
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-style: italic;
+  position: relative;
+}
+
+.testi-text::before {
+  content: '"';
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0.15;
+  position: absolute;
+  top: -16px;
+  left: -4px;
+  font-style: normal;
+  line-height: 1;
+}
+
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.testi-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(99,102,241,0.15));
+  border: 1px solid var(--glass-border);
+  color: var(--accent);
+}
+
+.testi-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.testi-role {
+  font-size: 0.75rem;
+  color: var(--text4);
+}
+
+.testi-badge {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--green);
+  background: rgba(34,197,94,0.1);
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-left: auto;
+}
+
+/* ======================================================
+   FAQ
+   ====================================================== */
+.faq-grid {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.faq-item:hover {
+  border-color: var(--border-hover);
+}
+
+.faq-item.active {
+  border-color: rgba(0,240,255,0.15);
+  box-shadow: 0 0 30px var(--glow-cyan);
+}
+
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s;
+}
+
+.faq-q:hover { color: var(--accent); }
+
+.faq-item.active .faq-q { color: var(--accent); }
+
+.faq-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--glow-cyan);
+  border: 1px solid rgba(0,240,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  transition: all 0.3s;
+}
+
+.faq-item.active .faq-icon {
+  background: var(--accent);
+  color: var(--bg);
+  transform: rotate(45deg);
+  box-shadow: 0 0 16px var(--glow-cyan);
+}
+
+.faq-q-text { flex: 1; }
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), padding 0.3s;
+  padding: 0 24px;
+}
+
+.faq-item.active .faq-a {
+  max-height: 300px;
+  padding: 0 24px 20px;
+}
+
+.faq-a-inner {
+  font-size: 0.88rem;
+  color: var(--text3);
+  line-height: 1.8;
+  padding-left: 46px;
+}
+
+/* ======================================================
+   CONTACT
+   ====================================================== */
+.contact-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.cta-box {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 56px 40px;
+  border-radius: var(--r);
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-main);
+  background-size: 300% 100%;
+  animation: gradientShift 3s ease infinite;
+}
+
+.cta-box h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
+.cta-box p { color: var(--text3); max-width: 600px; margin: 0 auto; font-size: 1.05rem; }
+
+.contact-panel {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  padding: 36px;
+}
+
+.contact-panel h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+.contact-panel .sub { font-size: 0.88rem; color: var(--text3); margin-bottom: 24px; }
+
+.c-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.25s;
+  cursor: pointer;
+}
+
+.c-row:last-child { border-bottom: none; }
+.c-row:hover { padding-left: 8px; }
+
+.c-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.c-icon.phone { background: rgba(0,240,255,0.08); color: var(--accent); border: 1px solid rgba(0,240,255,0.12); }
+.c-icon.email { background: rgba(34,197,94,0.08); color: var(--green); border: 1px solid rgba(34,197,94,0.12); }
+.c-icon.zalo { background: rgba(0,104,255,0.08); color: #60a5fa; border: 1px solid rgba(0,104,255,0.12); }
+.c-icon.fb { background: rgba(99,102,241,0.08); color: #818cf8; border: 1px solid rgba(99,102,241,0.12); }
+
+.c-row .cl { font-family: var(--mono); font-size: 0.7rem; color: var(--text4); }
+.c-row .cv { font-size: 0.92rem; font-weight: 500; }
+
+/* Form */
+.form-card {
+  overflow: hidden;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+}
+
+.form-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.015);
+}
+
+.form-bar-t {
+  flex: 1;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text4);
+}
+
+.form-body { padding: 32px; }
+
+.fg { margin-bottom: 16px; }
+
+.fl {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.fi, .fs, .ft {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 18px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+  transition: all 0.25s;
+}
+
+.fi:focus, .fs:focus, .ft:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--glow-cyan);
+}
+
+.fi::placeholder, .ft::placeholder { color: var(--text4); }
+.ft { min-height: 100px; resize: vertical; }
+.fs { appearance: none; cursor: pointer; }
+
+.form-submit-btn {
+  width: 100%;
+  padding: 16px;
+  margin-top: 8px;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.form-submit-btn:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 40px rgba(0,240,255,0.35), 0 0 60px rgba(0,240,255,0.12);
+}
+
+.form-submit-btn:hover::before { opacity: 1; }
+
+/* ======================================================
+   FOOTER
+   ====================================================== */
+footer {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--border);
+  padding: 56px 2rem 36px;
+}
+
+.foot-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 3rem;
+}
+
+.foot-logo {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.foot-logo .a { color: var(--accent); }
+
+.foot-desc {
+  font-size: 0.84rem;
+  color: var(--text3);
+  margin-bottom: 16px;
+  max-width: 320px;
+  line-height: 1.7;
+}
+
+.foot-socials { display: flex; gap: 8px; }
+
+.foot-socials a {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.foot-socials a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px var(--glow-cyan);
+}
+
+.foot-col h4 {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text4);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.foot-col ul { list-style: none; }
+.foot-col li { margin-bottom: 10px; }
+
+.foot-col a {
+  font-size: 0.86rem;
+  color: var(--text3);
+  transition: all 0.2s;
+}
+
+.foot-col a:hover { color: var(--accent); padding-left: 4px; }
+
+.foot-bottom {
+  max-width: 1280px;
+  margin: 32px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text4);
+}
+
+/* ======================================================
+   RESPONSIVE
+   ====================================================== */
+@media (max-width: 1100px) {
+  .srv-grid { grid-template-columns: repeat(2, 1fr); }
+  .tmpl-grid { grid-template-columns: repeat(2, 1fr); }
+  .pipe-grid { grid-template-columns: repeat(3, 1fr); }
+  .pipe-grid::before { display: none; }
+  .about-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  .testi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .srv-grid { grid-template-columns: 1fr; }
+  .tmpl-grid { grid-template-columns: 1fr; }
+  .case-grid { grid-template-columns: 1fr; }
+  .pipe-grid { grid-template-columns: 1fr; }
+  .contact-wrap { grid-template-columns: 1fr; }
+  .foot-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .menu-btn { display: block; }
+  .hero-stats { flex-wrap: wrap; gap: 14px; }
+  .hero-btns { flex-wrap: wrap; }
+  .hero h1 { font-size: 1.8rem; }
+  .hero-p { font-size: 0.95rem; }
+  .cta-box h2 { font-size: 1.5rem; }
+  .sec-title { font-size: 1.6rem; }
+  .val-grid { grid-template-columns: 1fr; }
+  .float-contacts { bottom: 16px; right: 16px; }
+  .float-btn { width: 50px; height: 50px; }
+  section { padding: 80px 1.25rem; }
+  .price-header { padding: 24px 20px 20px; }
+  .price-body { padding: 20px; }
+  .faq-a-inner { padding-left: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div class="loader-screen" id="loaderScreen">
+  <div class="loader-logo"><span class="bracket">&lt;</span>Hậu.Dev<span class="bracket">/&gt;</span></div>
+  <div class="loader-bar-track"><div class="loader-bar"></div></div>
+  <div class="loader-text"><span>$</span> initializing...</div>
+</div>
+
+<!-- ANIMATED GRADIENT MESH BG -->
+<div class="mesh-bg">
+  <div class="mesh-blob"></div>
+  <div class="mesh-blob"></div>
+  <div class="mesh-blob"></div>
+  <div class="mesh-blob"></div>
+</div>
+<div class="noise-overlay"></div>
+
+<!-- MOBILE OVERLAY MENU -->
+<div class="mobile-overlay" id="mobileMenu">
+  <button class="mobile-close" onclick="document.getElementById('mobileMenu').classList.remove('open')">
+    <span class="material-icons-round">close</span>
+  </button>
+  <a href="#industries" onclick="document.getElementById('mobileMenu').classList.remove('open')">Lĩnh Vực</a>
+  <a href="#templates" onclick="document.getElementById('mobileMenu').classList.remove('open')">Mẫu Web</a>
+  <a href="#cases" onclick="document.getElementById('mobileMenu').classList.remove('open')">Hiệu Quả</a>
+  <a href="#pricing" onclick="document.getElementById('mobileMenu').classList.remove('open')">Bảng Giá</a>
+  <a href="#about" onclick="document.getElementById('mobileMenu').classList.remove('open')">Về Tôi</a>
+  <a href="#faq" onclick="document.getElementById('mobileMenu').classList.remove('open')">FAQ</a>
+  <a href="#contact" class="mob-cta" onclick="document.getElementById('mobileMenu').classList.remove('open')">Tư Vấn Ngay</a>
+</div>
+
+<!-- FLOATING CONTACT -->
+<div class="float-contacts">
+  <a href="https://www.facebook.com/" target="_blank" class="float-btn fb-btn" aria-label="Facebook">
+    <span class="float-tip">Nhắn tin Facebook</span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+  </a>
+  <a href="https://zalo.me/0358500195" target="_blank" class="float-btn zalo-btn" aria-label="Zalo">
+    <span class="float-tip">Chat Zalo</span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.037 0 11.25c0 3.525 1.7 6.675 4.35 8.775V24l3.6-2.025c1.275.375 2.625.525 4.05.525 6.627 0 12-5.037 12-11.25S18.627 0 12 0zm1.2 15.15H9.6L13.8 9.6h-2.4L7.2 15.15V8.85h3.6l-4.2 5.55h2.4l4.2-5.55v6.3z"/></svg>
+  </a>
+  <a href="tel:0358500195" class="float-btn phone-btn" aria-label="Gọi điện">
+    <span class="float-tip">Gọi 0358.500.195</span>
+    <span class="material-icons-round" style="font-size:1.3rem">call</span>
+  </a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="bracket">&lt;</span>Hậu<span class="dot">.</span>Dev<span class="bracket">/&gt;</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#industries">Lĩnh Vực</a></li>
+      <li><a href="#templates">Mẫu Web</a></li>
+      <li><a href="#cases">Hiệu Quả</a></li>
+      <li><a href="#pricing">Bảng Giá</a></li>
+      <li><a href="#about">Về Tôi</a></li>
+      <li><a href="#contact" class="nav-cta">Tư Vấn Ngay</a></li>
+    </ul>
+    <button class="menu-btn" onclick="document.getElementById('mobileMenu').classList.add('open')">
+      <span class="material-icons-round">menu</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-grad"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Sẵn sàng nhận dự án mới
+      </div>
+      <h1>
+        Tăng Trưởng Doanh Số<br>
+        Với <span class="gradient-text" id="heroTyping"></span><span class="typing-cursor"></span>
+      </h1>
+      <p class="hero-p">
+        Tôi không chỉ viết code — tôi xây dựng hệ thống website & quản lý chuyên sâu cho doanh nghiệp SME, giúp bạn tự động hóa vận hành và biến khách truy cập thành khách hàng thật sự.
+      </p>
+      <div class="hero-btns">
+        <a href="#templates" class="btn btn-glow">
+          <span class="material-icons-round" style="font-size:1.1rem">visibility</span>
+          Xem Mẫu Web
+        </a>
+        <a href="#cases" class="btn btn-ghost">
+          <span class="material-icons-round" style="font-size:1.1rem">trending_up</span>
+          Hiệu Quả Thực Tế
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="h-stat">
+          <div class="h-stat-num"><span class="counter" data-target="5">0</span>+</div>
+          <div class="h-stat-label">Năm kinh nghiệm</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-num"><span class="counter" data-target="50">0</span>+</div>
+          <div class="h-stat-label">Dự án thành công</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-num"><span class="counter" data-target="100">0</span>%</div>
+          <div class="h-stat-label">Đúng deadline</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="glass-card" id="heroTerminal">
+        <div class="t-bar">
+          <div class="t-dot r"></div>
+          <div class="t-dot y"></div>
+          <div class="t-dot g"></div>
+          <span class="t-title">developer.json</span>
+        </div>
+        <div class="t-body">
+          <div class="tl"><span class="cd">$</span> <span class="cc">cat</span> developer.json</div>
+          <div class="tl"><span class="cd">{</span></div>
+          <div class="tl">&nbsp;&nbsp;<span class="cb">"name"</span>: <span class="cs">"Lê Công Hậu"</span>,</div>
+          <div class="tl">&nbsp;&nbsp;<span class="cb">"role"</span>: <span class="cs">"Full Stack Developer"</span>,</div>
+          <div class="tl">&nbsp;&nbsp;<span class="cb">"exp"</span>: <span class="co">"5+ năm"</span>,</div>
+          <div class="tl">&nbsp;&nbsp;<span class="cb">"focus"</span>: <span class="cs">"Website cho SME"</span>,</div>
+          <div class="tl">&nbsp;&nbsp;<span class="cb">"status"</span>: <span class="cg">"🟢 available"</span></div>
+          <div class="tl"><span class="cd">}</span></div>
+          <div class="tl"><span class="cd">$</span> <span class="cc" style="animation:cursorBlink 1s step-end infinite">▌</span></div>
+        </div>
+        <div class="t-profile">
+          <img src="https://leconghau.id.vn/images/avatar.png" alt="Lê Công Hậu" class="t-avatar">
+          <div>
+            <div class="t-name">Lê Công Hậu</div>
+            <div class="t-role">Fullstack Developer • Freelancer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="industries">
+  <div class="sec-container">
+    <div class="sec-header reveal">
+      <div class="sec-eyebrow">Lĩnh Vực Chuyên Ngành</div>
+      <h2 class="sec-title">Giải Pháp Web Cho Ngành Của Bạn</h2>
+      <p class="sec-desc">Mỗi ngành có đặc thù riêng — tôi thiết kế giải pháp "may đo" để tối ưu hiệu quả kinh doanh.</p>
+    </div>
+    <div class="srv-grid">
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">🏠</div><div class="srv-file">real-estate.tsx</div><h3>Bất Động Sản</h3><ul class="srv-list"><li><span class="ck">✓</span>Tích hợp bản đồ vị trí</li><li><span class="ck">✓</span>Hình ảnh 360° / Virtual Tour</li><li><span class="ck">✓</span>CRM quản lý khách hàng</li></ul></div>
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">🍜</div><div class="srv-file">retail-fnb.tsx</div><h3>Bán Lẻ & F&B</h3><ul class="srv-list"><li><span class="ck">✓</span>Menu điện tử QR Code</li><li><span class="ck">✓</span>Tích hợp ví điện tử</li><li><span class="ck">✓</span>Quản lý kho đơn giản</li></ul></div>
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">💼</div><div class="srv-file">enterprise.tsx</div><h3>Doanh Nghiệp & Dịch Vụ</h3><ul class="srv-list"><li><span class="ck">✓</span>Giao diện chuẩn doanh nhân</li><li><span class="ck">✓</span>Đa ngôn ngữ (Việt - Anh)</li><li><span class="ck">✓</span>Tối ưu SEO Top Google</li></ul></div>
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">🚀</div><div class="srv-file">landing-page.tsx</div><h3>Landing Page</h3><ul class="srv-list"><li><span class="ck">✓</span>Website công ty xây dựng</li><li><span class="ck">✓</span>Website công ty BĐS</li><li><span class="ck">✓</span>Tối ưu tỉ lệ chuyển đổi</li></ul></div>
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">🧘</div><div class="srv-file">spa-booking.tsx</div><h3>Website Tiệm Spa</h3><ul class="srv-list"><li><span class="ck">✓</span>Giao diện đẹp mắt</li><li><span class="ck">✓</span>Đặt lịch hẹn online</li><li><span class="ck">✓</span>Quản lý dịch vụ</li></ul></div>
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">🏨</div><div class="srv-file">room-manager.tsx</div><h3>Quản Lý Phòng Trọ</h3><ul class="srv-list"><li><span class="ck">✓</span>Quản lý cư dân</li><li><span class="ck">✓</span>Điện nước tự động</li><li><span class="ck">✓</span>Hoá đơn thông minh</li></ul></div>
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">☯</div><div class="srv-file">phong-thuy.tsx</div><h3>Website Phong Thuỷ</h3><ul class="srv-list"><li><span class="ck">✓</span>Tư vấn phong thủy online</li><li><span class="ck">✓</span>Xem tử vi chuyên nghiệp</li><li><span class="ck">✓</span>Giao diện truyền thống</li></ul></div>
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">💒</div><div class="srv-file">wedding.tsx</div><h3>Thiệp Cưới Online</h3><ul class="srv-list"><li><span class="ck">✓</span>Thiệp mời ấn tượng</li><li><span class="ck">✓</span>QR chuyển khoản</li><li><span class="ck">✓</span>Quản lý khách mời</li></ul></div>
+      <div class="g-card srv-card reveal"><div class="card-light"></div><div class="srv-icon">👔</div><div class="srv-file">laundry.tsx</div><h3>Quản Lý Tiệm Giặt</h3><ul class="srv-list"><li><span class="ck">✓</span>Theo dõi đơn hàng</li><li><span class="ck">✓</span>Quản lý khách hàng</li><li><span class="ck">✓</span>Báo cáo doanh thu</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMPLATES -->
+<section id="templates">
+  <div class="sec-container">
+    <div class="sec-header reveal">
+      <div class="sec-eyebrow">Thư Viện Mẫu</div>
+      <h2 class="sec-title">Website Mẫu Theo Ngành</h2>
+      <p class="sec-desc">Xem trước các giao diện hiện đại mà tôi đã phát triển.</p>
+    </div>
+    <div class="tmpl-grid">
+      <div class="g-card tmpl-card reveal">
+        <div class="card-light"></div>
+        <div class="tmpl-bar"><div class="tmpl-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="tmpl-url">thiep-cuoi.leconghau.dev</div></div>
+        <div class="tmpl-preview"><span class="material-icons-round p-icon">favorite</span></div>
+        <div class="tmpl-body"><span class="tmpl-tag wedding">Wedding</span><h4>Thiệp Cưới Online</h4><p>Tích hợp QR chuyển khoản, RSVP và lời chúc trực tuyến.</p><div class="tmpl-foot"><span class="tmpl-sold">✓ 12+ deployed</span><a href="https://leconghau.id.vn/wedding-demo.html" target="_blank" class="tmpl-link">Live Demo →</a></div></div>
+      </div>
+      <div class="g-card tmpl-card reveal">
+        <div class="card-light"></div>
+        <div class="tmpl-bar"><div class="tmpl-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="tmpl-url">vinhomes.leconghau.dev</div></div>
+        <div class="tmpl-preview"><span class="material-icons-round p-icon">apartment</span></div>
+        <div class="tmpl-body"><span class="tmpl-tag realestate">Real Estate</span><h4>Vinhomes Luxury</h4><p>Giao diện sang trọng cho dự án căn hộ cao cấp.</p><div class="tmpl-foot"><span class="tmpl-sold">✓ 12+ deployed</span><a href="#" class="tmpl-link">Live Demo →</a></div></div>
+      </div>
+      <div class="g-card tmpl-card reveal">
+        <div class="card-light"></div>
+        <div class="tmpl-bar"><div class="tmpl-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="tmpl-url">startup.leconghau.dev</div></div>
+        <div class="tmpl-preview"><span class="material-icons-round p-icon">rocket_launch</span></div>
+        <div class="tmpl-body"><span class="tmpl-tag corporate">Corporate</span><h4>Tech Startup Corp</h4><p>Giao diện hiện đại cho công ty công nghệ, startup.</p><div class="tmpl-foot"><span class="tmpl-sold">✓ 25+ deployed</span><a href="#" class="tmpl-link">Live Demo →</a></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section id="cases">
+  <div class="sec-container">
+    <div class="sec-header reveal">
+      <div class="sec-eyebrow">Case Study</div>
+      <h2 class="sec-title">Hiệu Quả Chứng Minh Bằng Con Số</h2>
+      <p class="sec-desc">Những câu chuyện thành công từ khách hàng đã tin tưởng hợp tác.</p>
+    </div>
+    <div class="case-grid">
+      <div class="g-card case-card reveal">
+        <div class="card-light"></div>
+        <div class="case-head"><div class="case-emoji fnb">☕</div><div><div class="case-branch">feat/fnb-ordering-system</div><div class="case-loc">Chuỗi Cafe 5 CN • TP.HCM</div></div></div>
+        <div class="case-body"><h3>Hệ thống đặt món & quản lý kho tự động</h3><div class="case-block"><div class="case-label warn">⚠ Vấn đề</div><p>Nhân viên order thủ công sai sót nhiều, không kiểm soát tồn kho thời gian thực.</p></div><div class="case-block"><div class="case-label ok">✓ Giải pháp</div><p>Web App order quét QR tại bàn, đồng bộ kho ngay khi thanh toán.</p></div><div class="case-nums"><div><div class="case-num-val">-30%</div><div class="case-num-desc">Thời gian chờ</div></div><div><div class="case-num-val">0%</div><div class="case-num-desc">Sai sót order</div></div></div></div>
+      </div>
+      <div class="g-card case-card reveal">
+        <div class="card-light"></div>
+        <div class="case-head"><div class="case-emoji seo">🔍</div><div><div class="case-branch">feat/seo-optimization</div><div class="case-loc">Xưởng nội thất • Đồng Nai</div></div></div>
+        <div class="case-body"><h3>Website chuẩn SEO & Phủ sóng Google</h3><div class="case-block"><div class="case-label warn">⚠ Vấn đề</div><p>Phụ thuộc quảng cáo Facebook, khách tìm Google không thấy thương hiệu.</p></div><div class="case-block"><div class="case-label ok">✓ Giải pháp</div><p>Website chuẩn SEO Semantic, tối ưu tốc độ tải trang dưới 1s.</p></div><div class="case-nums"><div><div class="case-num-val">Top 3</div><div class="case-num-desc">Từ khóa chính</div></div><div><div class="case-num-val">x2.5</div><div class="case-num-desc">Khách hàng tự nhiên</div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section>
+  <div class="sec-container">
+    <div class="sec-header reveal">
+      <div class="sec-eyebrow">Quy Trình Làm Việc</div>
+      <h2 class="sec-title">5 Bước Từ Ý Tưởng Đến Sản Phẩm</h2>
+      <p class="sec-desc">Quy trình chuyên nghiệp, minh bạch — bạn luôn nắm rõ tiến độ.</p>
+    </div>
+    <div class="pipe-grid">
+      <div class="pipe-stage reveal"><div class="pipe-num">01</div><div class="pipe-emoji">☕</div><h3>Tư Vấn</h3><p>Gặp gỡ, lắng nghe ý tưởng và nỗi đau doanh nghiệp.</p><div class="pipe-badge">● done</div></div>
+      <div class="pipe-stage reveal"><div class="pipe-num">02</div><div class="pipe-emoji">📐</div><h3>Hoạch Định</h3><p>Phương án kỹ thuật, wireframe, chốt deadline.</p><div class="pipe-badge">● done</div></div>
+      <div class="pipe-stage reveal"><div class="pipe-num">03</div><div class="pipe-emoji">💻</div><h3>Lập Trình</h3><p>Code sạch, tối ưu, bảo mật. Cập nhật liên tục.</p><div class="pipe-badge">● done</div></div>
+      <div class="pipe-stage reveal"><div class="pipe-num">04</div><div class="pipe-emoji">🧪</div><h3>Kiểm Thử</h3><p>Test kỹ trên mọi thiết bị.</p><div class="pipe-badge">● done</div></div>
+      <div class="pipe-stage reveal"><div class="pipe-num">05</div><div class="pipe-emoji">🚀</div><h3>Bàn Giao</h3><p>Triển khai, hướng dẫn & bảo hành trọn đời.</p><div class="pipe-badge">● done</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-container">
+    <div class="about-grid">
+      <div class="g-card reveal" style="overflow:hidden">
+        <div class="card-light"></div>
+        <div class="t-bar"><div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div><span class="t-title">README.md</span></div>
+        <div class="about-card-inner">
+          <img src="https://leconghau.id.vn/images/avatar.png" alt="Lê Công Hậu" class="about-av">
+          <div class="about-nm">Lê Công Hậu</div>
+          <div class="about-hd">@leconghau.dev</div>
+          <div class="about-bgs">
+            <span class="about-bg">🏢 5+ Năm KN</span>
+            <span class="about-bg">💼 Freelancer</span>
+            <span class="about-bg">🇻🇳 Việt Nam</span>
+          </div>
+          <div class="about-qt">"Tôi không chỉ viết code — tôi là đối tác công nghệ giúp bạn biến ý tưởng kinh doanh thành sản phẩm số sinh lời."</div>
+        </div>
+      </div>
+      <div class="about-right">
+        <div class="sec-eyebrow reveal">Câu Chuyện Của Tôi</div>
+        <h2 class="sec-title reveal" style="margin-bottom:16px">Tại Sao Tôi Chọn Làm Freelancer?</h2>
+        <p class="about-txt reveal">Sau nhiều năm làm việc tại các công ty công nghệ lớn, tôi nhận ra một "khoảng trống": Doanh nghiệp SME tại Việt Nam thường khó tiếp cận giải pháp công nghệ chất lượng cao với chi phí hợp lý.</p>
+        <p class="about-txt reveal">Tôi mang đến chất lượng code "chuẩn Enterprise" nhưng với sự linh hoạt và mức giá cá nhân — cắt giảm mọi chi phí trung gian.</p>
+        <div class="val-grid reveal">
+          <div class="val-item"><h4>✦ Tận Tâm</h4><p>Đặt lợi ích khách hàng lên trên hết.</p></div>
+          <div class="val-item"><h4>✦ Minh Bạch</h4><p>Rõ ràng chi phí và tiến độ.</p></div>
+          <div class="val-item"><h4>✦ Hiệu Quả</h4><p>Giải pháp tinh gọn, tối ưu chi phí.</p></div>
+          <div class="val-item"><h4>✦ Đồng Hành</h4><p>Hỗ trợ trọn đời sau bàn giao.</p></div>
+        </div>
+        <div class="tech-sec reveal">
+          <div class="tech-lbl">// tech_stack</div>
+          <div class="tech-wrap">
+            <span class="tech-pill">ReactJS / NextJS</span>
+            <span class="tech-pill">React Native</span>
+            <span class="tech-pill">Swift</span>
+            <span class="tech-pill">Tailwind CSS</span>
+            <span class="tech-pill">NodeJS / NestJS</span>
+            <span class="tech-pill">MongoDB</span>
+            <span class="tech-pill">MySQL / PostgreSQL</span>
+            <span class="tech-pill">Docker</span>
+            <span class="tech-pill">AWS</span>
+            <span class="tech-pill">Linux</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="sec-container">
+    <div class="sec-header reveal">
+      <div class="sec-eyebrow">Bảng Giá</div>
+      <h2 class="sec-title">Gói Dịch Vụ Phù Hợp Mọi Ngân Sách</h2>
+      <p class="sec-desc">Minh bạch, rõ ràng — không phát sinh chi phí ẩn. Chọn gói phù hợp với nhu cầu của bạn.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Basic -->
+      <div class="g-card price-card reveal">
+        <div class="card-light"></div>
+        <div class="price-header">
+          <div class="price-name">Starter</div>
+          <div class="price-amount">
+            <span class="currency">~</span>
+            <span class="value">3tr</span>
+            <span class="unit">VND</span>
+          </div>
+          <div class="price-desc">Landing page đơn giản, phù hợp cá nhân & startup.</div>
+        </div>
+        <div class="price-body">
+          <ul class="price-features">
+            <li><span class="feat-icon yes">✓</span> Thiết kế 1-3 trang</li>
+            <li><span class="feat-icon yes">✓</span> Responsive mọi thiết bị</li>
+            <li><span class="feat-icon yes">✓</span> Form liên hệ cơ bản</li>
+            <li><span class="feat-icon yes">✓</span> Hosting & domain 1 năm</li>
+            <li><span class="feat-icon yes">✓</span> Bảo hành 3 tháng</li>
+            <li class="disabled"><span class="feat-icon no">✗</span> Quản trị nội dung CMS</li>
+            <li class="disabled"><span class="feat-icon no">✗</span> Tích hợp thanh toán</li>
+          </ul>
+          <a href="#contact" class="price-cta outline">
+            <span class="material-icons-round" style="font-size:1rem">chat</span>
+            Tư Vấn Gói Này
+          </a>
+        </div>
+      </div>
+      <!-- Pro — Featured -->
+      <div class="g-card price-card featured reveal">
+        <div class="card-light"></div>
+        <div class="price-header">
+          <div class="price-popular">★ PHỔ BIẾN</div>
+          <div class="price-name">Professional</div>
+          <div class="price-amount">
+            <span class="currency">~</span>
+            <span class="value">8tr</span>
+            <span class="unit">VND</span>
+          </div>
+          <div class="price-desc">Website chuyên nghiệp với CMS, SEO, phù hợp doanh nghiệp SME.</div>
+        </div>
+        <div class="price-body">
+          <ul class="price-features">
+            <li><span class="feat-icon yes">✓</span> Thiết kế 5-10 trang</li>
+            <li><span class="feat-icon yes">✓</span> Responsive + tối ưu tốc độ</li>
+            <li><span class="feat-icon yes">✓</span> Quản trị nội dung CMS</li>
+            <li><span class="feat-icon yes">✓</span> SEO on-page chuẩn Google</li>
+            <li><span class="feat-icon yes">✓</span> Tích hợp Zalo, Messenger</li>
+            <li><span class="feat-icon yes">✓</span> Hosting & domain 1 năm</li>
+            <li><span class="feat-icon yes">✓</span> Bảo hành 6 tháng</li>
+          </ul>
+          <a href="#contact" class="price-cta primary">
+            <span class="material-icons-round" style="font-size:1rem">rocket_launch</span>
+            Chọn Gói Này
+          </a>
+        </div>
+      </div>
+      <!-- Enterprise -->
+      <div class="g-card price-card reveal">
+        <div class="card-light"></div>
+        <div class="price-header">
+          <div class="price-name">Enterprise</div>
+          <div class="price-amount">
+            <span class="currency">~</span>
+            <span class="value">15tr+</span>
+            <span class="unit">VND</span>
+          </div>
+          <div class="price-desc">Hệ thống web app tuỳ chỉnh, tích hợp sâu cho doanh nghiệp lớn.</div>
+        </div>
+        <div class="price-body">
+          <ul class="price-features">
+            <li><span class="feat-icon yes">✓</span> Tuỳ chỉnh không giới hạn</li>
+            <li><span class="feat-icon yes">✓</span> Web App / Dashboard quản lý</li>
+            <li><span class="feat-icon yes">✓</span> Tích hợp thanh toán, CRM</li>
+            <li><span class="feat-icon yes">✓</span> API & tích hợp bên thứ ba</li>
+            <li><span class="feat-icon yes">✓</span> Tối ưu bảo mật nâng cao</li>
+            <li><span class="feat-icon yes">✓</span> DevOps, CI/CD, monitoring</li>
+            <li><span class="feat-icon yes">✓</span> Bảo hành 12 tháng + SLA</li>
+          </ul>
+          <a href="#contact" class="price-cta outline">
+            <span class="material-icons-round" style="font-size:1rem">handshake</span>
+            Liên Hệ Báo Giá
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="price-note reveal">💡 Giá trên là <span>tham khảo</span> — liên hệ để nhận báo giá chính xác theo yêu cầu cụ thể của bạn.</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="sec-container">
+    <div class="sec-header reveal">
+      <div class="sec-eyebrow">Khách Hàng Nói Gì</div>
+      <h2 class="sec-title">Đánh Giá Từ Đối Tác Đã Hợp Tác</h2>
+      <p class="sec-desc">Những phản hồi thật từ khách hàng đã tin tưởng và đồng hành.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="g-card testi-card reveal">
+        <div class="card-light"></div>
+        <div class="testi-stars">
+          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+        </div>
+        <div class="testi-text">
+          Hậu làm việc rất chuyên nghiệp, hiểu nhu cầu nhanh và bàn giao đúng hẹn. Website mới giúp tôi tăng 40% lượng khách hỏi mua qua Google chỉ sau 2 tháng.
+        </div>
+        <div class="testi-author">
+          <div class="testi-avatar">TN</div>
+          <div>
+            <div class="testi-name">Anh Thanh Nguyên</div>
+            <div class="testi-role">Giám đốc — Nội thất Đồng Nai</div>
+          </div>
+          <span class="testi-badge">✓ verified</span>
+        </div>
+      </div>
+      <div class="g-card testi-card reveal">
+        <div class="card-light"></div>
+        <div class="testi-stars">
+          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+        </div>
+        <div class="testi-text">
+          Trước đây tôi tốn rất nhiều tiền cho agency nhưng kết quả không như ý. Hậu giúp tôi tiết kiệm chi phí mà chất lượng còn tốt hơn, support nhiệt tình 24/7.
+        </div>
+        <div class="testi-author">
+          <div class="testi-avatar">ML</div>
+          <div>
+            <div class="testi-name">Chị Mỹ Linh</div>
+            <div class="testi-role">Chủ chuỗi Cafe — TP.HCM</div>
+          </div>
+          <span class="testi-badge">✓ verified</span>
+        </div>
+      </div>
+      <div class="g-card testi-card reveal">
+        <div class="card-light"></div>
+        <div class="testi-stars">
+          <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+        </div>
+        <div class="testi-text">
+          Hệ thống quản lý phòng trọ Hậu làm giúp tôi tiết kiệm 3 tiếng mỗi ngày. Tính tiền điện nước, xuất hoá đơn tự động, quá tiện lợi!
+        </div>
+        <div class="testi-author">
+          <div class="testi-avatar">VP</div>
+          <div>
+            <div class="testi-name">Anh Văn Phú</div>
+            <div class="testi-role">Chủ 3 khu trọ — Bình Dương</div>
+          </div>
+          <span class="testi-badge">✓ verified</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="sec-container">
+    <div class="sec-header reveal" style="text-align:center;margin-left:auto;margin-right:auto;display:flex;flex-direction:column;align-items:center;">
+      <div class="sec-eyebrow">FAQ</div>
+      <h2 class="sec-title">Câu Hỏi Thường Gặp</h2>
+      <p class="sec-desc" style="text-align:center">Giải đáp những thắc mắc phổ biến trước khi bạn quyết định hợp tác.</p>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item reveal" onclick="this.classList.toggle('active')">
+        <button class="faq-q">
+          <span class="faq-icon">+</span>
+          <span class="faq-q-text">Thời gian hoàn thành một website là bao lâu?</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Tuỳ theo độ phức tạp: Landing page đơn giản từ <strong>5-7 ngày</strong>, website doanh nghiệp từ <strong>2-3 tuần</strong>, và hệ thống web app tuỳ chỉnh từ <strong>1-2 tháng</strong>. Tôi luôn cam kết deadline rõ ràng ngay từ đầu.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('active')">
+        <button class="faq-q">
+          <span class="faq-icon">+</span>
+          <span class="faq-q-text">Tôi không biết gì về kỹ thuật, có làm việc được không?</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Hoàn toàn được! Đa số khách hàng của tôi không có nền tảng kỹ thuật. Tôi sẽ tư vấn, giải thích mọi thứ bằng ngôn ngữ dễ hiểu, và hướng dẫn bạn sử dụng tận tình sau khi bàn giao.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('active')">
+        <button class="faq-q">
+          <span class="faq-icon">+</span>
+          <span class="faq-q-text">Chi phí thanh toán như thế nào?</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Thông thường chia làm <strong>2 đợt</strong>: 50% khi bắt đầu dự án và 50% khi bàn giao hoàn tất. Với dự án lớn có thể thoả thuận chia thành 3 đợt. Hỗ trợ thanh toán qua chuyển khoản ngân hàng hoặc ví điện tử.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('active')">
+        <button class="faq-q">
+          <span class="faq-icon">+</span>
+          <span class="faq-q-text">Sau khi bàn giao, tôi có được hỗ trợ không?</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Có! Tất cả dự án đều được <strong>bảo hành miễn phí</strong> (3-12 tháng tuỳ gói). Sau thời gian bảo hành, tôi vẫn hỗ trợ bảo trì với chi phí rất hợp lý. Tôi cam kết đồng hành lâu dài.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('active')">
+        <button class="faq-q">
+          <span class="faq-icon">+</span>
+          <span class="faq-q-text">Website có chuẩn SEO để lên Google không?</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Mọi website tôi xây dựng đều được <strong>tối ưu SEO on-page</strong> theo tiêu chuẩn Google: cấu trúc semantic, tốc độ tải nhanh dưới 2s, mobile-friendly, schema markup. Gói Professional trở lên còn được tối ưu SEO chuyên sâu hơn.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('active')">
+        <button class="faq-q">
+          <span class="faq-icon">+</span>
+          <span class="faq-q-text">Tôi muốn thay đổi yêu cầu giữa chừng thì sao?</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Tôi hiểu rằng ý tưởng có thể thay đổi. Các thay đổi nhỏ trong phạm vi ban đầu được hỗ trợ <strong>miễn phí</strong>. Nếu thay đổi lớn ảnh hưởng đến scope, tôi sẽ trao đổi rõ ràng về chi phí và thời gian bổ sung trước khi thực hiện.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-container">
+    <div class="contact-wrap">
+      <div class="cta-box reveal">
+        <h2>Sẵn sàng nâng tầm doanh nghiệp?</h2>
+        <p>Chia sẻ ý tưởng — tôi luôn sẵn lòng tư vấn giải pháp tốt nhất, hoàn toàn miễn phí.</p>
+      </div>
+      <div class="contact-panel reveal">
+        <h3>Liên Hệ Trực Tiếp</h3>
+        <p class="sub">Phản hồi trong 2 giờ — chọn kênh bạn thích nhất:</p>
+        <a href="tel:0358500195" class="c-row"><div class="c-icon phone"><span class="material-icons-round" style="font-size:1.2rem">call</span></div><div><div class="cl">Điện thoại</div><div class="cv">0358.500.195</div></div></a>
+        <a href="https://zalo.me/0358500195" target="_blank" class="c-row"><div class="c-icon zalo"><span class="material-icons-round" style="font-size:1.2rem">chat</span></div><div><div class="cl">Zalo</div><div class="cv">Chat ngay trên Zalo</div></div></a>
+        <a href="https://www.facebook.com/" target="_blank" class="c-row"><div class="c-icon fb"><span class="material-icons-round" style="font-size:1.2rem">forum</span></div><div><div class="cl">Facebook Messenger</div><div class="cv">Nhắn tin Messenger</div></div></a>
+        <a href="/cdn-cgi/l/email-protection#523e37313d3c353a3327626b6712372a333f223e377c313d3f" class="c-row"><div class="c-icon email"><span class="material-icons-round" style="font-size:1.2rem">mail</span></div><div><div class="cl">Email</div><div class="cv"><span class="__cf_email__" data-cfemail="8ee2ebede1e0e9e6effbbeb7bbceebf6efe3fee2eba0ede1e3">[email&#160;protected]</span></div></div></a>
+      </div>
+      <div class="form-card reveal">
+        <div class="form-bar"><div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div><span class="form-bar-t">Gửi yêu cầu tư vấn</span></div>
+        <div class="form-body">
+          <div class="fg"><label class="fl">Họ tên</label><input type="text" class="fi" placeholder="Nhập họ tên..."></div>
+          <div class="fg"><label class="fl">Số điện thoại</label><input type="tel" class="fi" placeholder="Nhập số điện thoại..."></div>
+          <div class="fg"><label class="fl">Ngành nghề</label><select class="fs"><option>-- Chọn ngành nghề --</option><option>Bất động sản</option><option>Bán lẻ / Shop Online</option><option>F&B (Nhà hàng, Cafe)</option><option>Doanh nghiệp / Dịch vụ</option><option>Khác</option></select></div>
+          <div class="fg"><label class="fl">Nội dung tư vấn</label><textarea class="ft" placeholder="Mô tả ý tưởng hoặc yêu cầu của bạn..."></textarea></div>
+          <button class="form-submit-btn"><span class="material-icons-round" style="font-size:1.1rem">send</span>Gửi Yêu Cầu Tư Vấn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo"><span class="a">&lt;</span>Hậu.Dev<span class="a">/&gt;</span></div>
+      <p class="foot-desc">Xây dựng giải pháp công nghệ thông minh, giúp doanh nghiệp SME tối ưu hóa vận hành và tăng trưởng bền vững.</p>
+      <div class="foot-socials"><a href="#">FB</a><a href="#">ZL</a><a href="#">LI</a><a href="#">GH</a></div>
+    </div>
+    <div class="foot-col"><h4>Giải Pháp</h4><ul><li><a href="#">Thiết kế Web BĐS</a></li><li><a href="#">Web Bán Hàng</a></li><li><a href="#">Phần Mềm Quản Lý</a></li><li><a href="#">SEO Tổng Thể</a></li></ul></div>
+    <div class="foot-col"><h4>Thông Tin</h4><ul><li><a href="#about">Về Lê Công Hậu</a></li><li><a href="#cases">Case Studies</a></li><li><a href="#contact">Liên Hệ</a></li></ul></div>
+  </div>
+  <div class="foot-bottom">© 2026 leconghau.dev — Built with passion & clean code</div>
+</footer>
+
+<!-- ====================================================
+     SCRIPTS
+     ==================================================== -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ===== THREE.JS — ENHANCED PARTICLE CONSTELLATION =====
+(function(){
+  const canvas = document.getElementById('heroCanvas');
+  if(!canvas) return;
+
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
+  camera.position.z = 35;
+
+  // Main particles
+  const N = 400;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(N * 3);
+  const sizes = new Float32Array(N);
+  const vel = [];
+
+  for(let i = 0; i < N; i++){
+    pos[i*3]   = (Math.random()-0.5)*70;
+    pos[i*3+1] = (Math.random()-0.5)*45;
+    pos[i*3+2] = (Math.random()-0.5)*25;
+    sizes[i] = Math.random() * 2.5 + 0.5;
+    vel.push({
+      x: (Math.random()-0.5)*0.012,
+      y: (Math.random()-0.5)*0.012,
+      z: (Math.random()-0.5)*0.005
+    });
+  }
+
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+  // Custom shader material for glowing particles
+  const mat = new THREE.ShaderMaterial({
+    uniforms: {
+      uColor: { value: new THREE.Color(0x00f0ff) },
+      uTime: { value: 0 }
+    },
+    vertexShader: `
+      attribute float size;
+      varying float vAlpha;
+      uniform float uTime;
+      void main(){
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * (180.0 / -mv.z);
+        gl_Position = projectionMatrix * mv;
+        vAlpha = 0.3 + 0.3 * sin(uTime * 0.5 + position.x * 0.3);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uColor;
+      varying float vAlpha;
+      void main(){
+        float d = length(gl_PointCoord - 0.5);
+        if(d > 0.5) discard;
+        float glow = 1.0 - smoothstep(0.0, 0.5, d);
+        gl_FragColor = vec4(uColor, glow * vAlpha);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  const points = new THREE.Points(geo, mat);
+  scene.add(points);
+
+  // Connection lines
+  const maxL = 600;
+  const lGeo = new THREE.BufferGeometry();
+  const lPos = new Float32Array(maxL * 6);
+  const lCol = new Float32Array(maxL * 6);
+  lGeo.setAttribute('position', new THREE.BufferAttribute(lPos, 3));
+  lGeo.setAttribute('color', new THREE.BufferAttribute(lCol, 3));
+  lGeo.setDrawRange(0, 0);
+
+  const lMat = new THREE.LineBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.12,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  const lines = new THREE.LineSegments(lGeo, lMat);
+  scene.add(lines);
+
+  let mx = 0, my = 0;
+
+  function resize(){
+    const hero = document.querySelector('.hero');
+    if(!hero) return;
+    const w = hero.clientWidth, h = hero.clientHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e => {
+    mx = (e.clientX / window.innerWidth - 0.5) * 2;
+    my = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  const clock = new THREE.Clock();
+
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    mat.uniforms.uTime.value = t;
+
+    const p = geo.attributes.position.array;
+    for(let i = 0; i < N; i++){
+      p[i*3]   += vel[i].x;
+      p[i*3+1] += vel[i].y;
+      p[i*3+2] += vel[i].z;
+      if(Math.abs(p[i*3])   > 35) vel[i].x *= -1;
+      if(Math.abs(p[i*3+1]) > 22) vel[i].y *= -1;
+      if(Math.abs(p[i*3+2]) > 12) vel[i].z *= -1;
+    }
+    geo.attributes.position.needsUpdate = true;
+
+    // Lines
+    let li = 0;
+    const lp = lGeo.attributes.position.array;
+    const lc = lGeo.attributes.color.array;
+    const thresh = 7;
+    const c1 = new THREE.Color(0x00f0ff);
+    const c2 = new THREE.Color(0x6366f1);
+
+    for(let i = 0; i < N && li < maxL; i++){
+      for(let j = i+1; j < N && li < maxL; j++){
+        const dx=p[i*3]-p[j*3], dy=p[i*3+1]-p[j*3+1], dz=p[i*3+2]-p[j*3+2];
+        const d2 = dx*dx+dy*dy+dz*dz;
+        if(d2 < thresh*thresh){
+          const ratio = 1 - Math.sqrt(d2)/(thresh);
+          const c = c1.clone().lerp(c2, ratio);
+          lp[li*6]=p[i*3]; lp[li*6+1]=p[i*3+1]; lp[li*6+2]=p[i*3+2];
+          lp[li*6+3]=p[j*3]; lp[li*6+4]=p[j*3+1]; lp[li*6+5]=p[j*3+2];
+          lc[li*6]=c.r; lc[li*6+1]=c.g; lc[li*6+2]=c.b;
+          lc[li*6+3]=c.r; lc[li*6+4]=c.g; lc[li*6+5]=c.b;
+          li++;
+        }
+      }
+    }
+    lGeo.setDrawRange(0, li*2);
+    lGeo.attributes.position.needsUpdate = true;
+    lGeo.attributes.color.needsUpdate = true;
+
+    camera.position.x += (mx*4 - camera.position.x)*0.015;
+    camera.position.y += (-my*3 - camera.position.y)*0.015;
+    camera.lookAt(scene.position);
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+})();
+
+// ===== 3D TILT + LIGHT FOLLOW =====
+document.querySelectorAll('.g-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const cx = r.width/2, cy = r.height/2;
+    const rx = ((y-cy)/cy)*-10;
+    const ry = ((x-cx)/cx)*10;
+    card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.03,1.03,1.03)`;
+    card.style.setProperty('--lx', x+'px');
+    card.style.setProperty('--ly', y+'px');
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+    setTimeout(()=>card.style.transition='',600);
+  });
+  card.addEventListener('mouseenter', () => { card.style.transition = 'none'; });
+});
+
+// ===== HERO TERMINAL TILT =====
+const ht = document.getElementById('heroTerminal');
+if(ht){
+  ht.addEventListener('mousemove', e => {
+    const r = ht.getBoundingClientRect();
+    const rx = ((e.clientY-r.top-r.height/2)/(r.height/2))*-8;
+    const ry = ((e.clientX-r.left-r.width/2)/(r.width/2))*8;
+    ht.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+  });
+  ht.addEventListener('mouseleave', () => {
+    ht.style.transition = 'transform 0.7s cubic-bezier(0.34,1.56,0.64,1)';
+    ht.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+    setTimeout(()=>ht.style.transition='',700);
+  });
+  ht.addEventListener('mouseenter', () => ht.style.transition='none');
+}
+
+// ===== NUMBER COUNTER =====
+const counters = document.querySelectorAll('.counter');
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      const el = entry.target;
+      const target = +el.dataset.target;
+      const duration = 1800;
+      const start = performance.now();
+      function update(now){
+        const progress = Math.min((now - start)/duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        el.textContent = Math.round(target * eased);
+        if(progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+      counterObserver.unobserve(el);
+    }
+  });
+}, {threshold: 0.5});
+counters.forEach(c => counterObserver.observe(c));
+
+// ===== SCROLL REVEAL =====
+const reveals = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if(entry.isIntersecting){
+      const siblings = entry.target.parentElement.querySelectorAll('.reveal');
+      let idx = Array.from(siblings).indexOf(entry.target);
+      setTimeout(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0) rotateX(0)';
+      }, idx * 80);
+      revealObs.unobserve(entry.target);
+    }
+  });
+}, {threshold: 0.08, rootMargin: '0px 0px -30px 0px'});
+
+reveals.forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(40px) rotateX(4deg)';
+  el.style.transition = 'opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)';
+  el.style.transformOrigin = 'center bottom';
+  revealObs.observe(el);
+});
+
+// ===== HERO TYPING EFFECT =====
+(function(){
+  const el = document.getElementById('heroTyping');
+  if(!el) return;
+  const words = ['Giải Pháp Web', 'Website Chuyên Nghiệp', 'Hệ Thống Quản Lý', 'Ứng Dụng Mobile', 'Landing Page'];
+  let wordIdx = 0;
+  let charIdx = 0;
+  let isDeleting = false;
+  let pause = 0;
+
+  function tick(){
+    const word = words[wordIdx];
+    if(pause > 0){ pause--; requestAnimationFrame(tick); return; }
+
+    if(!isDeleting){
+      charIdx++;
+      el.textContent = word.substring(0, charIdx);
+      if(charIdx === word.length){
+        isDeleting = true;
+        pause = 120; // pause at full word
+      }
+    } else {
+      charIdx--;
+      el.textContent = word.substring(0, charIdx);
+      if(charIdx === 0){
+        isDeleting = false;
+        wordIdx = (wordIdx + 1) % words.length;
+        pause = 30;
+      }
+    }
+    const speed = isDeleting ? 30 : 60;
+    setTimeout(tick, speed);
+  }
+
+  // Start after loader
+  setTimeout(tick, 2800);
+})();
+
+// ===== LOADING SCREEN =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loaderScreen');
+    if(loader) loader.classList.add('hide');
+  }, 2400);
+});
+</script>
+</body>
+</html>
